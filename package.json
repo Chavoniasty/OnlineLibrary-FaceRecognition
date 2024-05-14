@@ -1,0 +1,22 @@
+{
+  "name": "onlinelibrary-facerecognition",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chavoniasty/OnlineLibrary-FaceRecognition.git"
+  },
+  "author": "Dominik Molenda, Damian Jakubowski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chavoniasty/OnlineLibrary-FaceRecognition/issues"
+  },
+  "homepage": "https://github.com/Chavoniasty/OnlineLibrary-FaceRecognition#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
