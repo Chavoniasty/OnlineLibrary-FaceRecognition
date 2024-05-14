@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/Chavoniasty/OnlineLibrary-FaceRecognition#readme",
   "dependencies": {
-    "express": "^4.19.2"
+    "@grpc/grpc-js": "^1.10.7",
+    "express": "^4.19.2",
+    "google-protobuf": "^3.21.2",
+    "grpc-tools": "^1.12.4"
   }
 }
