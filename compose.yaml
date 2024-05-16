@@ -2,7 +2,7 @@ services:
   server:
     build: ./backend/server
     command: node index.js
-    restart: always
+    restart: unless-stopped
     depends_on:
       microservice:
         condition: service_started
@@ -31,7 +31,7 @@ services:
   microservice:
     build: ./backend/microservice
     command: python main.py
-    restart: always
+    restart: unless-stopped
     ports:
       - "50051:50051"
     networks:
@@ -96,6 +96,23 @@ services:
       interval: 3s
       retries: 5
       start_period: 30s
+  
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: admin
+      PMA_PASSWORD_FILE: /run/secrets/db_password
+      PMA_ARBITRARY: 1
+    networks:
+      - db-net
+    secrets:
+      - db_password
+    depends_on:
+      - db
 
 networks:
   db-net:
