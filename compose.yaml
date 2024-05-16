@@ -2,20 +2,88 @@ services:
   server:
     build: ./backend/server
     command: node index.js
+    restart: always
     depends_on:
-      - microservice
+      microservice:
+        condition: service_started
+      db:
+        condition: service_healthy
     ports:
       - "3000:3000"
     networks:
       - grpc-net
+      - client-server-net
+      - db-net
+    environment:
+      DB_USER: admin
+      DB_NAME: library
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
   microservice:
     build: ./backend/microservice
     command: python main.py
+    restart: always
     ports:
       - "50051:50051"
     networks:
       - grpc-net
+      - db-net
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+  frontend:
+    build: ./client
+    command: npm run dev
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    networks:
+      - client-server-net
+  db:
+    image: mysql:latest
+    volumes:
+      - ./database/data:/var/lib/mysql
+      - ./database/scripts:/docker-entrypoint-initdb.d
+    restart: always
+    environment:
+      MYSQL_USER: admin
+      MYSQL_DATABASE: library
+      MYSQL_INITDB_SKIP_TZINFO: yes
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_root_password
+      - db_password
+    expose:
+      - 3306
+      - 33060
+    ports:
+      - "3306:3306"
+    networks:
+      - db-net
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 --password="$$(cat /run/secrets/db_password)" --silent']
+      interval: 3s
+      retries: 5
+      start_period: 30s
 
 networks:
+  db-net:
+    driver: bridge
   grpc-net:
     driver: bridge
+  client-server-net:
+    driver: bridge
+
+secrets:
+   db_password:
+     file: ./database/secrets/db_password.txt
+   db_root_password:
+     file: ./database/secrets/db_root_password.txt

@@ -12,5 +12,3 @@ EXPOSE 50051
 COPY . .
 
 ENV PYTHONUNBUFFERED 1
-
-# CMD [ "python", "./main.py" ]
