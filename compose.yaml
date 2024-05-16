@@ -20,6 +20,14 @@ services:
       DB_PASSWORD_FILE: /run/secrets/db_password
     secrets:
       - db_password
+    develop:
+      watch:
+        - action: sync
+          path: ./backend/server
+          target: /usr/src/app
+        - action: rebuild
+          path: ./backend/server/package.json
+
   microservice:
     build: ./backend/microservice
     command: python main.py
@@ -36,6 +44,11 @@ services:
       DB_PASSWORD_FILE: /run/secrets/db_password
     secrets:
       - db_password
+    develop:
+      watch:
+        - action: rebuild
+          path: ./backend/server
+
   frontend:
     build: ./client
     command: npm run dev
@@ -46,6 +59,16 @@ services:
       - server
     networks:
       - client-server-net
+    develop:
+      watch:
+        - action: sync
+          path: ./client
+          target: /app
+          ignore:
+            - node_modules/ 
+        - action: rebuild
+          path: ./client/package.json
+          
   db:
     image: mysql:latest
     volumes:
