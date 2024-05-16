@@ -1,0 +1,21 @@
+services:
+  server:
+    build: ./backend/server
+    command: node index.js
+    depends_on:
+      - microservice
+    ports:
+      - "3000:3000"
+    networks:
+      - grpc-net
+  microservice:
+    build: ./backend/microservice
+    command: python main.py
+    ports:
+      - "50051:50051"
+    networks:
+      - grpc-net
+
+networks:
+  grpc-net:
+    driver: bridge
