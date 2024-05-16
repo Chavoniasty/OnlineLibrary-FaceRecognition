@@ -2,7 +2,7 @@ const express = require('express');
 var messages = require('./helloworld_pb');
 var services = require('./helloworld_grpc_pb');
 
-const target = "localhost:50051";
+const target = "microservice:50051";
 
 var grpc = require('@grpc/grpc-js');
 const client = new services.GreeterClient(target,
@@ -23,6 +23,7 @@ app.get('/', async (req, res) => {
         console.log(temp)
         res.send(temp);
     })
+    // res.send('elo');
 });
 
 app.listen(3000, () => {
