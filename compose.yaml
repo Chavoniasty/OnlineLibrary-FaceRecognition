@@ -22,7 +22,7 @@ services:
       - db_password
     develop:
       watch:
-        - action: sync
+        - action: sync+restart
           path: ./backend/server
           target: /usr/src/app
         - action: rebuild
@@ -46,8 +46,9 @@ services:
       - db_password
     develop:
       watch:
-        - action: rebuild
-          path: ./backend/server
+        - action: sync+restart
+          path: ./backend/microservice
+          target: /usr/src/app/
 
   frontend:
     build: ./client
@@ -92,11 +93,15 @@ services:
     networks:
       - db-net
     healthcheck:
-      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 --password="$$(cat /run/secrets/db_password)" --silent']
+      test:
+        [
+          'CMD-SHELL',
+          'mysqladmin ping -h 127.0.0.1 --password="$$(cat /run/secrets/db_password)" --silent'
+        ]
       interval: 3s
       retries: 5
       start_period: 30s
-  
+
   phpmyadmin:
     image: phpmyadmin
     restart: always
@@ -123,7 +128,7 @@ networks:
     driver: bridge
 
 secrets:
-   db_password:
-     file: ./database/secrets/db_password.txt
-   db_root_password:
-     file: ./database/secrets/db_root_password.txt
+  db_password:
+    file: ./database/secrets/db_password.txt
+  db_root_password:
+    file: ./database/secrets/db_root_password.txt
