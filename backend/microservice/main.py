@@ -1,8 +1,10 @@
+from concurrent import futures
+import logging
+
 import helloworld_pb2
 import helloworld_pb2_grpc
 import grpc
-from concurrent import futures
-import logging
+
 
 class Greeter(helloworld_pb2_grpc.GreeterServicer):
 
@@ -11,6 +13,7 @@ class Greeter(helloworld_pb2_grpc.GreeterServicer):
 
     def SayHelloAgain(self, request, context):
         return helloworld_pb2.HelloReply(message=f"Hello again, {request.name}!")
+
 
 def serve():
     port = "50051"
