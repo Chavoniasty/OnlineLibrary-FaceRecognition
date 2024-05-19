@@ -1,8 +1,8 @@
 from concurrent import futures
 import logging
 
-import helloworld_pb2
-import helloworld_pb2_grpc
+import gen.helloworld_pb2 as helloworld_pb2
+import gen.helloworld_pb2_grpc as helloworld_pb2_grpc
 import grpc
 
 
