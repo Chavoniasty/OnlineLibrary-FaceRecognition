@@ -13,8 +13,8 @@ flatbuffers==24.3.25
 gast==0.5.4
 gdown==5.2.0
 google-pasta==0.2.0
-grpcio==1.63.0
-grpcio-tools==1.63.0
+grpcio
+grpcio-tools
 gunicorn==22.0.0
 h5py==3.11.0
 idna==3.7
@@ -30,13 +30,14 @@ ml-dtypes==0.3.2
 mtcnn==0.1.1
 namex==0.0.8
 numpy==1.26.4
+opencv-contrib-python==4.9.0.80
 opencv-python==4.9.0.80
 opt-einsum==3.3.0
 optree==0.11.0
 packaging==24.0
 pandas==2.2.2
 pillow==10.3.0
-protobuf==4.25.3
+protobuf
 Pygments==2.18.0
 PySocks==1.7.1
 python-dateutil==2.9.0.post0

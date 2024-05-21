@@ -26,4 +26,4 @@ class FaceAnalyzer:
         emotion: str = res["dominant_emotion"]
         race: str = res["dominant_race"]
         gender: str = res["dominant_gender"]
-        return {"age": age, "emotion": emotion, "race": race, "gender": gender}
+        return {"age": age, "emotion": emotion, "race": race, "gender": gender.lower()}
