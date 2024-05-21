@@ -67,7 +67,7 @@ services:
       - ./database/scripts:/docker-entrypoint-initdb.d
     restart: always
     environment:
-      MYSQL_DATABASE: library
+      MYSQL_DATABASE: faceslib
       MYSQL_INITDB_SKIP_TZINFO: yes
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
     env_file:
