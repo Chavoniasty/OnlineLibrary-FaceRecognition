@@ -1,5 +1,6 @@
 from concurrent import futures
 import logging
+import base64
 
 import gen.helloworld_pb2 as helloworld_pb2
 import gen.helloworld_pb2_grpc as helloworld_pb2_grpc
@@ -25,10 +26,22 @@ class FaceAnalyzer(fapb2_grpc.FaceAnalysisServicer):
     def __init__(self, face_analyzer: FaceAnalyzerService):
         self.face_analyzer: FaceAnalyzerService = face_analyzer
 
-    def AnalyzeFace(self, request: fapb2.AnalyzeFaceRequest, context):
-        result = self.face_analyzer.analyze(request.base64String)
-        response: fapb2.AnalyzeFaceResponse = fapb2.AnalyzeFaceResponse(**result)
-        return response
+    def AnalyzeFace(
+        self, request: fapb2.AnalyzeFaceRequest, context: grpc.ServicerContext
+    ):
+        # for testing purposes ovveride the base64String with one from reuqest
+        base64String = request.base64String
+        # base64String = ""
+        # with open("./data/test_photo.jpg", "rb") as f:
+        #    base64String = base64.b64encode(f.read())
+        try:
+            result = self.face_analyzer.analyze(base64String)
+            response: fapb2.AnalyzeFaceResponse = fapb2.AnalyzeFaceResponse(**result)
+            return response
+        except Exception as e:
+            logging.error(e)
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
+            return fapb2.AnalyzeFaceResponse()
 
 
 def serve():
