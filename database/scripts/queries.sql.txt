@@ -1,0 +1,23 @@
+// zwrócenie id ulubionych
+SELECT faces.id, faces.age, faces.race, faces.emotion, faces.gender, faces.facedata
+FROM faceslib.`favourites` LEFT JOIN faceslib.`users` ON favourites.user_id = users.id
+LEFT JOIN faceslib.`faces` ON favourites.face_id = faces.id
+WHERE user_id = 0;
+
+// zwrócenie wszystkich blobów <> filtrowanie do tego
+SELECT * FROM faceslib.`faces`
+WHERE id != -1
+and age != -1
+and emotion != -1
+and race != -1
+and gender != -1
+LIMIT 10
+OFFSET 0;
+
+// pobieranie hasha i użytkownika 
+SELECT * FROM faceslib.`users` WHERE id = 1; 
+
+//wstawianie zdjęcia
+INSERT INTO faceslib.faces (age, race, emotion, gender, facedata)
+VALUES (12, 'white', 'happy', 'woman', 'data');
+SELECT LAST_INSERT_ID() as id;
