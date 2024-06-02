@@ -16,7 +16,11 @@ function App() {
             <>
               <Filter />
               <Dashboard />
-            </> :
+              <button className='flex items-center justify-center h-12 p-6 font-bold text-white rounded-xl bg-emerald-600'>
+                Add new face to library
+              </button>
+            </>
+            :
             <Login isLogged={isLogged} setIsLogged={setIsLogged} />
           }
         </div>
