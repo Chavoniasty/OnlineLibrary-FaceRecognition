@@ -1,6 +1,9 @@
+const { AbstractQueryBuilder } = require('./abstract_query_builder');
 
-class FacesTableQueryBuilder {
+
+class FacesTableQueryBuilder extends AbstractQueryBuilder {
     constructor() {
+        super();
         this.TABLE_NAME = 'faces';
         this.query = '';
     }
@@ -14,13 +17,13 @@ class FacesTableQueryBuilder {
         }
     }
 
-    where(field) {
+    where(field, operator, value) {
         if (this.query.includes('SELECT')) {
             if (!this.query.includes('WHERE')) {
-                this.query += 'WHERE ' + field + ' = ? ';
+                this.query += 'WHERE ' + field + ' ' + operator + ' ' + value + ' ';
                 return this;
             } else {
-                this.query += 'AND ' + field + ' = ? ';
+                this.query += 'AND ' + field + ' ' + operator + ' ' + value + ' ';
                 return this;
             }
         } else {

@@ -1,4 +1,4 @@
-const ftqb = require('./faces_table_query_builder.js');
+const ftqb = require('../db/builders/faces_table_query_builder.js');
 
 describe('FacesTableQueryBuilder', () => {
     let queryBuilder;
@@ -18,23 +18,23 @@ describe('FacesTableQueryBuilder', () => {
     });
 
     it('should throw an error if SELECT statement is missing', () => {
-        expect(() => queryBuilder.where('id')).toThrowError('SELECT statement is missing');
+        expect(() => queryBuilder.where('id', '=', 1)).toThrowError('SELECT statement is missing');
     });
 
     it('should generate a valid WHERE query', () => {
-        queryBuilder.select(['id', 'name']).where('id');
+        queryBuilder.select(['id', 'name']).where('id', '=', 1);
         const query = queryBuilder.build();
-        expect(query).toBe('SELECT id, name FROM faces WHERE id = ?;');
+        expect(query).toBe('SELECT id, name FROM faces WHERE id = 1;');
     });
 
     it('should generate a valid WHERE query with multiple conditions', () => {
-        queryBuilder.select(['id', 'name']).where('id').where('name');
+        queryBuilder.select(['id', 'name']).where('id', '=', 1).where('name', '=', 'John');
         const query = queryBuilder.build();
-        expect(query).toBe('SELECT id, name FROM faces WHERE id = ? AND name = ?;');
+        expect(query).toBe('SELECT id, name FROM faces WHERE id = 1 AND name = John;');
     });
 
     it('should clear the query after building', () => {
-        queryBuilder.select(['id', 'name']).where('id').build();
+        queryBuilder.select(['id', 'name']).build();
         expect(queryBuilder.query).toBe('');
     });
 
