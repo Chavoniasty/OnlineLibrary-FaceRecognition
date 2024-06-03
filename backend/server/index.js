@@ -4,6 +4,8 @@ var services = require('./helloworld_grpc_pb');
 var fam = require("./face_analyzer_pb");
 var fas = require("./face_analyzer_grpc_pb");
 
+const cors = require('cors');
+
 const target = "microservice:50051";
 
 var grpc = require('@grpc/grpc-js');
@@ -16,6 +18,10 @@ var request = new messages.HelloRequest();
 request.setName("amigo")
 
 const app = express();
+app.use(cors({
+    origin: '*',
+    optionsSuccessStatus: 200
+}));
 
 app.get('/', async (req, res) => {
     client.sayHello(request, function (err, resp) {
