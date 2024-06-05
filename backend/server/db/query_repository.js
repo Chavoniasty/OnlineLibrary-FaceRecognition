@@ -3,7 +3,7 @@ const knex = require('knex')({
     debug: true,
     connection: {
         host: process.env.MY_SQL_HOST,
-        port: 3306,
+        port: process.env.MY_SQL_PORT,
         user: process.env.MY_SQL_READER_USER,
         password: process.env.MY_SQL_READER_PASSWORD,
         database: process.env.MY_SQL_DB_NAME,
@@ -27,18 +27,15 @@ class QueryRepository {
         } else if (ageRight) {
             query = query.where('age', '<=', ageRight);
         }
-
         if (race) {
             query = query.whereIn('race', race);
         }
         if (gender) {
             query = query.whereIn('gender', gender);
         }
-
         if (emotion) {
             query = query.whereIn('emotion', emotion);
         }
-
         return query;
     }
 

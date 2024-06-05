@@ -3,15 +3,21 @@ class Paginator {
     static PAGINATION_LIMIT = 10;
 
     static getNextPage(req) {
+        let limit = this.clipLimit(req);
         if (req.query.offset) {
-            let nextLimit = req.query.limit ? parseInt(req.query.limit) : this.PAGINATION_LIMIT;
-            let nextOffset = parseInt(req.query.offset) + nextLimit;
+            let nextOffset = parseInt(req.query.offset) + limit;
 
             return req.url.replace('offset=' + req.query.offset, 'offset=' + nextOffset);
         } else {
-            let nextOffset = req.query.limit ?? 10;
-            return req.url + '&offset=' + nextOffset;
+            if (Object.keys(req.query).length === 0) {
+                return req.url + '?offset=' + limit;
+            }
+            return req.url + '&offset=' + limit;
         }
+    }
+
+    static clipLimit(req) {
+        return req.query.limit ? Math.min(parseInt(req.query.limit), Paginator.PAGINATION_LIMIT) : Paginator.PAGINATION_LIMIT;
     }
 }
 
