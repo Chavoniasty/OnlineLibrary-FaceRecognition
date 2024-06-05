@@ -1,29 +1,19 @@
 const express = require('express');
-var messages = require('./helloworld_pb');
-var services = require('./helloworld_grpc_pb');
-
-const target = "microservice:50051";
-
-var grpc = require('@grpc/grpc-js');
-const client = new services.GreeterClient(target,
-    grpc.credentials.createInsecure());
-
-
-
-var request = new messages.HelloRequest();
-request.setName("amigo")
+const QueryRepository = require('./db/query_repository');
+const { DbEnums } = require('./db/db_enums');
 
 const app = express();
 
-
+const queryRepository = new QueryRepository();
 
 app.get('/', async (req, res) => {
-    client.sayHello(request, await function (err, resp) {
-        const temp = resp.getMessage();
-        console.log(temp)
-        res.send(temp);
-    })
-    // res.send('elo');
+    queryRepository.getFaces(10,
+        null,
+        [DbEnums.Races.WHITE, DbEnums.Races.BLACK],
+        [DbEnums.Genders.WOMAN],
+        [DbEnums.Emotions.HAPPY]).then((u) => {
+            res.send(u);
+        });
 });
 
 app.listen(3000, () => {
