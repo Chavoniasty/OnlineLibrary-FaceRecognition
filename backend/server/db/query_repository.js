@@ -2,19 +2,21 @@ const knex = require('knex')({
     client: 'mysql2',
     debug: true,
     connection: {
-        host: 'db',
+        host: process.env.MY_SQL_HOST,
         port: 3306,
-        user: 'reader',
-        password: 'reader',
-        database: 'faceslib',
+        user: process.env.MY_SQL_READER_USER,
+        password: process.env.MY_SQL_READER_PASSWORD,
+        database: process.env.MY_SQL_DB_NAME,
     },
 });
 
+FACES_TABLE = 'faces';
+FAVOURITES_TABLE = 'favourites';
 
 class QueryRepository {
 
-    facedataTable = () => knex("faces");
-    favouritesTable = () => knex("favourites");
+    facedataTable = () => knex(FACES_TABLE);
+    favouritesTable = () => knex(FAVOURITES_TABLE);
 
     async getFaces(ageLeft, ageRight, race, gender, emotion, limit, offset) {
         let query = this.facedataTable().select('*').limit(limit ? limit : 10).offset(offset ? offset : 0);
