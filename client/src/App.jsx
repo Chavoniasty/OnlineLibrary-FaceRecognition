@@ -6,11 +6,25 @@ import Login from './components/Login'
 
 function App() {
   const [isLogged, setIsLogged] = useState(false)
-  const [race, setRace] = useState([""])
-  const [emotion, setEmotion] = useState([""])
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  const [race, setRace] = useState([])
+  const [emotion, setEmotion] = useState([])
+  const [gender, setGender] = useState([])
   const [minAge, setMinAge] = useState(0)
   const [maxAge, setMaxAge] = useState(100)
 
+
+  const [faces, setFaces] = useState()
+
+  const getFacesFromDB = () => {
+    console.log(race)
+    console.log(emotion)
+    console.log(gender)
+    console.log(minAge)
+    console.log(maxAge)
+    // request ktory zwraca dane twarze i potem setFaces(res.data) :)
+  }
 
   return (
     <div className='flex flex-col items-center w-screen h-screen'>
@@ -19,14 +33,20 @@ function App() {
         <div className='lg:h-4/5 lg:flex lg:flex-col lg:items-center lg:justify-around'>
           {isLogged === true ?
             <>
-              <Filter setRace={setRace} setEmotion={setEmotion} setMinAge={setMinAge} setMaxAge={setMaxAge} />
-{/*              <Dashboard race={race} emotion={emotion} minAge={minAge} maxAge={maxAge}/>*/}
-              <button className='flex items-center justify-center h-12 p-6 font-bold text-white rounded-xl bg-emerald-600'>
-                Add new face to library
-              </button>
+              <Filter setRace={setRace} setEmotion={setEmotion} setGender={setGender} setMinAge={setMinAge} setMaxAge={setMaxAge} getFacesFromDB={getFacesFromDB} />
+              <Dashboard faces={faces} />
+              {isAdmin ?
+                <button className='flex items-center justify-center h-12 p-6 font-bold text-white bg-blue-500 rounded-xl'>
+                  Add new face to library
+                </button>
+                :
+                <>
+                </>
+              }
+
             </>
             :
-            <Login isLogged={isLogged} setIsLogged={setIsLogged} />
+            < Login isLogged={isLogged} setIsLogged={setIsLogged} />
           }
         </div>
       </div>
