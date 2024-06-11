@@ -372,6 +372,7 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,python,linux,visualstudiocode,node
 
 data/
+*.h5
 models/
 
 database/secrets/*.txt
