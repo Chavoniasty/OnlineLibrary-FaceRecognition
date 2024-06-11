@@ -1,13 +1,14 @@
 const express = require('express');
 const QueryRepository = require('./db/query_repository');
-const { DbEnums } = require('./db/db_enums');
 const { Paginator } = require('./utils/pagination');
+const { AuthRepository } = require('./db/admin_repository');
 
 const app = express();
 
 const queryRepository = new QueryRepository();
+const authRepository = new AuthRepository();
 
-app.get('/', async (req, res) => {
+app.get('/faces', async (req, res) => {
     try {
         let params = req.query;
         let limit = Paginator.clipLimit(req);
@@ -30,6 +31,35 @@ app.get('/', async (req, res) => {
             "data": data,
             "nextPage": Paginator.getNextPage(req),
             "hasNextPage": data.length >= limit
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            "message": "Internal server error"
+        });
+    }
+});
+
+app.get('/login', async (req, res) => {
+    try {
+        let params = req.query;
+        if (!params.username || !params.password) {
+            res.status(400).json({
+                "message": "Username and password are required"
+            });
+            return;
+        }
+        let [user, code, msg] = await authRepository.authenticateUser(params.username, params.password);
+        if (!user) {
+            res.status(code).json({
+                "message": msg
+            });
+            return;
+        }
+        res.json({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
         });
     } catch (error) {
         console.error(error);
