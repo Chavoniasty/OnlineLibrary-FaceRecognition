@@ -3,10 +3,11 @@ import Navbar from './components/Navbar'
 import Filter from './components/Filter'
 import Dashboard from './components/Dashboard'
 import Login from './components/Login'
+import Drag from "./components/Drag.jsx";
 
 function App() {
   const [isLogged, setIsLogged] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(true)
 
   const [race, setRace] = useState([])
   const [emotion, setEmotion] = useState([])
@@ -18,11 +19,6 @@ function App() {
   const [faces, setFaces] = useState()
 
   const getFacesFromDB = async () => {
-    console.log(race)
-    console.log(emotion)
-    console.log(gender)
-    console.log(minAge)
-    console.log(maxAge)
     try {
       const response = await fetch(`http://localhost:3000/faces?${new URLSearchParams({
         ageLeft: minAge,
@@ -61,9 +57,12 @@ function App() {
               <Filter setRace={setRace} setEmotion={setEmotion} setGender={setGender} setMinAge={setMinAge} setMaxAge={setMaxAge} getFacesFromDB={getFacesFromDB} />
               <Dashboard faces={faces} />
               {isAdmin ?
+                <>
                 <button className='flex items-center justify-center h-12 p-6 font-bold text-white bg-blue-500 rounded-xl'>
                   Add new face to library
                 </button>
+                <Drag />
+                </>
                 :
                 <>
                 </>

@@ -3,7 +3,7 @@ import 'react-multi-carousel/lib/styles.css'
 import FaceCard from './FaceCard';
 import { useState } from 'react';
 
-export default function Dashboard() {
+export default function Dashboard(faces) {
     const responsive = {
 
         max: {
@@ -53,10 +53,10 @@ export default function Dashboard() {
         <div className='flex flex-col justify-center w-full h-full'>
             <div className='lg:max-w-[1024px] h-full'>
                 <h1 className="text-2xl font-bold">Faces</h1>
-                {tempFaces.length === 3 ?
+                {faces.length === 3 ?
                     <Carousel responsive={responsive}
                         infinite={true}>
-                        {tempFaces.map(face => (
+                        {faces.map(face => (
                             <FaceCard image={face.image} race={face.race} emotion={face.emotion} gender={face.gender} age={face.age} key={face.id} />
                         ))}
                     </Carousel>
@@ -70,6 +70,7 @@ export default function Dashboard() {
                     </div>
                 }
             </div>
+
         </div>
     )
 }
