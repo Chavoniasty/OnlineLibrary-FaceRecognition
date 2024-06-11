@@ -93,28 +93,29 @@ app.get('/login', async (req, res) => {
             "message": "Internal server error"
         });
     }
-    app.get('/', async (req, res) => {
-        client.sayHello(request, function (err, resp) {
-            const temp = resp.getMessage();
-            console.log(temp)
-            res.send(temp);
-        })
-    });
+});
+app.get('/', async (req, res) => {
+    client.sayHello(request, function (err, resp) {
+        const temp = resp.getMessage();
+        console.log(temp)
+        res.send(temp);
+    })
+});
 
-    app.get('/test', async (req, res) => {
-        // set correct params from request
-        var analyzeFaceRequest = new fam.AnalyzeFaceRequest();
-        faceAnalysisService.analyzeFace(analyzeFaceRequest, function (err, resp) {
-            if (err) {
-                // do some error handling here
-                res.send("There was an error")
-            } else {
-                console.log(resp)
-                res.send(resp);
-            }
-        })
-    });
+app.get('/test', async (req, res) => {
+    // set correct params from request
+    var analyzeFaceRequest = new fam.AnalyzeFaceRequest();
+    faceAnalysisService.analyzeFace(analyzeFaceRequest, function (err, resp) {
+        if (err) {
+            // do some error handling here
+            res.send("There was an error")
+        } else {
+            console.log(resp)
+            res.send(resp);
+        }
+    })
+});
 
-    app.listen(3000, () => {
-        console.log('Server is running on port 3000');
-    });
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
