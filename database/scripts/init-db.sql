@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS faceslib.users (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(60) NOT NULL, -- `BCrypt hash` according to bcrypt.node.docs result is 60 characters long.
-    email VARCHAR(50) NOT NULL
+    email VARCHAR(50) NOT NULL,
+    is_admin BIT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS faceslib.favourites (
@@ -27,8 +28,8 @@ CREATE TABLE IF NOT EXISTS faceslib.favourites (
     FOREIGN KEY (face_id) REFERENCES faceslib.faces(id)
 );
 
-INSERT INTO faceslib.users (username, password, email)
-VALUES ('GUEST_USER', 'GUEST_PASSWORD', 'guest@email.com'); 
+INSERT INTO faceslib.users (username, password, email, is_admin)
+VALUES ('GUEST_USER', 'GUEST_PASSWORD', 'guest@email.com', 0); 
 
 /*
 INSERT INTO faceslib.faces (age, race, emotion, gender, facedata)

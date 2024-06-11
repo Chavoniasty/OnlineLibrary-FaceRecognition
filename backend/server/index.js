@@ -27,6 +27,9 @@ app.get('/faces', async (req, res) => {
             });
             return;
         }
+        data.forEach((elem) => {
+            elem.facedata = Buffer.from(elem.facedata).toString('base64')
+        })
         res.json({
             "data": data,
             "nextPage": Paginator.getNextPage(req),
@@ -56,10 +59,12 @@ app.get('/login', async (req, res) => {
             });
             return;
         }
+        console.log(user.is_admin)
         res.json({
             "id": user.id,
             "username": user.username,
             "email": user.email,
+            "isAdmin": Buffer.from(user.is_admin).toString() != '0'
         });
     } catch (error) {
         console.error(error);
