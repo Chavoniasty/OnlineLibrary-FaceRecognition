@@ -17,13 +17,38 @@ function App() {
 
   const [faces, setFaces] = useState()
 
-  const getFacesFromDB = () => {
+  const getFacesFromDB = async () => {
     console.log(race)
     console.log(emotion)
     console.log(gender)
     console.log(minAge)
     console.log(maxAge)
-    // request ktory zwraca dane twarze i potem setFaces(res.data) :)
+    try {
+      const response = await fetch(`http://localhost:3000/faces?${new URLSearchParams({
+        ageLeft: minAge,
+        ageRight: maxAge,
+        race: race,
+        gender: gender,
+        emotion: emotion,
+        offset: 0
+      })}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setFaces(data);
+    } catch (error) {
+      console.error('There has been a problem with your fetch operation:', error);
+    }
+
   }
 
   return (

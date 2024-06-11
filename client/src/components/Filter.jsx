@@ -1,6 +1,3 @@
-// Filter.jsx
-import { useState } from 'react';
-
 export default function Filter({ setRace, setEmotion, setGender, setMinAge, setMaxAge, getFacesFromDB }) {
     const handleRaceChange = (event) => {
         const { value, checked } = event.target;
