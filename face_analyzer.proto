@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package face_analysis;
+
+// The face analysis service definition.
+service FaceAnalysis {
+  // Analyze the face image and return the face analysis result.
+  rpc AnalyzeFace(AnalyzeFaceRequest) returns (AnalyzeFaceResponse) {}
+}
+
+// The request message containing the user's face image encodded as base64 .
+message AnalyzeFaceRequest {
+  string base64String = 1;
+}
+
+// The response message containing the face analysis result.
+message AnalyzeFaceResponse {
+  int32 age = 1;
+  string race = 2;
+  string gender = 3;
+  string emotion = 4;
+}
