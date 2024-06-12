@@ -9,13 +9,23 @@ const knex = require('knex')({
     },
 });
 
-FACES_TABLE = 'faces';
-FAVOURITES_TABLE = 'favourites';
+FACES_TABLE = 'faceslib.faces';
+FAVOURITES_TABLE = 'faceslib.favourites';
 
 class AdminRepository {
 
     facedataTable = () => knex(FACES_TABLE);
     favouritesTable = () => knex(FAVOURITES_TABLE);
+
+    async insertFaceRecord(age_, gender_, race_, emotion_, faceData_) {
+        return this.facedataTable().insert({
+            age: age_,
+            gender: gender_,
+            race: race_,
+            emotion: emotion_,
+            facedata: faceData_,
+        }, "id");
+    }
 }
 
 USERS_TABLE = 'faceslib.users';

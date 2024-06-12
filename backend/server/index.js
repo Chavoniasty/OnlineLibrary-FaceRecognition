@@ -1,6 +1,4 @@
 const express = require('express');
-var messages = require('./helloworld_pb');
-var services = require('./helloworld_grpc_pb');
 var fam = require("./face_analyzer_pb");
 var fas = require("./face_analyzer_grpc_pb");
 
@@ -9,16 +7,12 @@ const cors = require('cors');
 const target = "microservice:50051";
 
 var grpc = require('@grpc/grpc-js');
-const client = new services.GreeterClient(target,
-    grpc.credentials.createInsecure());
 
 const faceAnalysisService = new fas.FaceAnalysisClient(target, grpc.credentials.createInsecure());
 
-var request = new messages.HelloRequest();
-request.setName("amigo")
 const QueryRepository = require('./db/query_repository');
 const { Paginator } = require('./utils/pagination');
-const { AuthRepository } = require('./db/admin_repository');
+const { AuthRepository, AdminRepository } = require('./db/admin_repository');
 
 const app = express();
 app.use(cors({
@@ -26,8 +20,11 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 
+app.use(express.json());
+
 const queryRepository = new QueryRepository();
 const authRepository = new AuthRepository();
+const adminRepository = new AdminRepository();
 
 app.get('/faces', async (req, res) => {
     try {
@@ -80,7 +77,6 @@ app.get('/login', async (req, res) => {
             });
             return;
         }
-        console.log(user.is_admin)
         res.json({
             "id": user.id,
             "username": user.username,
@@ -94,20 +90,34 @@ app.get('/login', async (req, res) => {
         });
     }
 });
+
 app.get('/', async (req, res) => {
-    client.sayHello(request, function (err, resp) {
-        const temp = resp.getMessage();
-        console.log(temp)
-        res.send(temp);
-    })
+    res.json({
+        "status": "Healthy"
+    });
 });
 
-app.get('/test', async (req, res) => {
-    // set correct params from request
+app.post('/addPhotoToDB', async (req, res) => {
+    let body = req.body;
+    let id = await adminRepository.insertFaceRecord(
+        body.age,
+        body.gender,
+        body.race,
+        body.emotion,
+        body.facedata,
+    )
+    res.json({
+        "id": id[0]
+    });
+});
+
+
+app.get('/processPhoto', async (req, res) => {
+    let facedata = req.query.facedata;
     var analyzeFaceRequest = new fam.AnalyzeFaceRequest();
+    analyzeFaceRequest.setBase64string(facedata);
     faceAnalysisService.analyzeFace(analyzeFaceRequest, function (err, resp) {
         if (err) {
-            // do some error handling here
             res.send("There was an error")
         } else {
             console.log(resp)
