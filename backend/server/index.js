@@ -112,8 +112,8 @@ app.post('/addPhotoToDB', async (req, res) => {
 });
 
 
-app.get('/processPhoto', async (req, res) => {
-    let facedata = req.query.facedata;
+app.post('/processPhoto', async (req, res) => {
+    let facedata = req.body.facedata;
     var analyzeFaceRequest = new fam.AnalyzeFaceRequest();
     analyzeFaceRequest.setBase64string(facedata);
     faceAnalysisService.analyzeFace(analyzeFaceRequest, function (err, resp) {
@@ -121,7 +121,13 @@ app.get('/processPhoto', async (req, res) => {
             res.send("There was an error")
         } else {
             console.log(resp)
-            res.send(resp);
+            let [age, race, gender, emotion] = resp.array
+            res.json({
+                "age": age,
+                "race": race,
+                "gender": gender,
+                "emotion": emotion
+            });
         }
     })
 });
