@@ -1,4 +1,3 @@
-// src/DragAndDrop.js
 import React, { useState } from 'react';
 
 const DragAndDrop = () => {
@@ -21,22 +20,52 @@ const DragAndDrop = () => {
         e.stopPropagation();
     };
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setDragging(false);
+const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
 
-        const files = e.dataTransfer.files;
-        if (files && files.length > 0) {
-            const file = files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result;
-                console.log(base64String);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+        const file = files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            let base64String = reader.result;
+
+            // Extract the base64 string without the prefix
+            const base64Content = base64String.split(',')[1];
+            console.log(base64Content);
+
+            // Send the base64 content to the backend
+            fetch('http://localhost:3000/processPhoto', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ facedata: base64Content }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();  // Read the response as text
+            })
+            .then(text => {
+                // Try to parse the response as JSON
+                try {
+                    const data = JSON.parse(text);
+                    console.log(data);
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                    console.log('Response text:', text);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
 
     return (
         <div

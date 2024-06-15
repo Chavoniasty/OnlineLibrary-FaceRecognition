@@ -113,12 +113,12 @@ app.post('/addPhotoToDB', async (req, res) => {
 
 
 app.post('/processPhoto', async (req, res) => {
-    let facedata = req.body.facedata;
+    let facedata = req.body.facedata;  // Correctly parse the facedata from the body
     var analyzeFaceRequest = new fam.AnalyzeFaceRequest();
     analyzeFaceRequest.setBase64string(facedata);
     faceAnalysisService.analyzeFace(analyzeFaceRequest, function (err, resp) {
         if (err) {
-            res.send("There was an error")
+            res.status(500).send("There was an error");
         } else {
             console.log(resp)
             let [age, race, gender, emotion] = resp.array
@@ -128,9 +128,12 @@ app.post('/processPhoto', async (req, res) => {
                 "gender": gender,
                 "emotion": emotion
             });
+            console.log(resp);
+            res.send(resp);
         }
-    })
+    });
 });
+
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');

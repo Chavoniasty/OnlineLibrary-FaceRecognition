@@ -19,6 +19,8 @@ class FaceAnalyzer(fapb2_grpc.FaceAnalysisServicer):
     ):
         # for testing purposes ovveride the base64String with one from reuqest
         base64String = request.base64String
+        logging.info("dupa")
+        logging.info(base64String)
         # base64String = ""
         # with open("./data/test_photo.jpg", "rb") as f:
         #    base64String = base64.b64encode(f.read())

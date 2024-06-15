@@ -4,6 +4,7 @@ import Filter from './components/Filter'
 import Dashboard from './components/Dashboard'
 import Login from './components/Login'
 import Drag from "./components/Drag.jsx";
+import Modal from '@mui/material/Modal';
 
 function App() {
   const [isLogged, setIsLogged] = useState(false)
@@ -14,6 +15,14 @@ function App() {
   const [gender, setGender] = useState([])
   const [minAge, setMinAge] = useState(0)
   const [maxAge, setMaxAge] = useState(100)
+
+  const [open, setOpen] = useState(false);
+  const showModal = (Modal) => {
+    setOpen(true);
+  };
+  const hideModal = () => {
+    setOpen(false);
+  };
 
 
   const [faces, setFaces] = useState()
@@ -47,6 +56,8 @@ function App() {
 
   }
 
+
+
   return (
     <div className='flex flex-col items-center w-screen h-screen'>
       <Navbar isLogged={isLogged} setIsLogged={setIsLogged} />
@@ -58,10 +69,17 @@ function App() {
               <Dashboard faces={faces} />
               {isAdmin ?
                 <>
-                <button className='flex items-center justify-center h-12 p-6 font-bold text-white bg-blue-500 rounded-xl'>
-                  Add new face to library
-                </button>
-                <Drag />
+                  <button onClick={() => showModal(Modal)}
+                    className='flex items-center justify-center h-12 p-6 font-bold text-white bg-blue-500 rounded-xl'>
+                    Add new face to library
+                  </button>
+                  <Modal
+                    open={open}>
+                    <div>
+                      Elo
+                    </div>
+                  </Modal>
+                  <Drag />
                 </>
                 :
                 <>
