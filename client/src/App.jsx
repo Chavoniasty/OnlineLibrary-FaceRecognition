@@ -5,6 +5,8 @@ import Dashboard from './components/Dashboard'
 import Login from './components/Login'
 import Drag from "./components/Drag.jsx";
 import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 function App() {
   const [isLogged, setIsLogged] = useState(false)
@@ -17,11 +19,18 @@ function App() {
   const [maxAge, setMaxAge] = useState(100)
 
   const [open, setOpen] = useState(false);
-  const showModal = (Modal) => {
-    setOpen(true);
-  };
-  const hideModal = () => {
-    setOpen(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
   };
 
 
@@ -69,17 +78,21 @@ function App() {
               <Dashboard faces={faces} />
               {isAdmin ?
                 <>
-                  <button onClick={() => showModal(Modal)}
+                  <button onClick={() => handleOpen(Modal)}
                     className='flex items-center justify-center h-12 p-6 font-bold text-white bg-blue-500 rounded-xl'>
                     Add new face to library
                   </button>
                   <Modal
-                    open={open}>
-                    <div>
-                      Elo
-                    </div>
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={style}>
+                      <Drag />
+                    </Box>
                   </Modal>
-                  <Drag />
+
                 </>
                 :
                 <>
