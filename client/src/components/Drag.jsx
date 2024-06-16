@@ -41,7 +41,6 @@ const DragAndDrop = () => {
 
                 // Extract the base64 string without the prefix
                 const base64Content = base64String.split(',')[1];
-                console.log(base64Content);
 
                 // Send the base64 content to the backend
                 fetch('http://localhost:3000/processPhoto', {
@@ -67,7 +66,9 @@ const DragAndDrop = () => {
                             setTempEmotion(data.emotion);
                             setTempGender(data.gender)
                             setTempRace(data.race);
-
+                            console.log(base64Content);
+                            setTempBase64(base64Content);
+                            console.log(tempBase64)
                             console.log(data);
                         } catch (error) {
                             console.error('Error parsing JSON:', error);
@@ -80,22 +81,62 @@ const DragAndDrop = () => {
         }
     };
 
+    const sendToBackend = () => {
+        setIsResponse(false);
+        const data = {
+            age: tempAge,
+            gender: tempGender,
+            race: tempRace,
+            emotion: tempEmotion,
+            facedata: tempBase64
+        };
 
+        fetch('http://localhost:3000/addPhotoToDB', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Read the response as JSON
+            })
+            .then(data => {
+                console.log('Successfully saved to the database:', data);
+            })
+            .catch(error => console.error('Error:', error));
+    };
 
     return (
         <>
             {isResponse == true ?
                 <div className='flex flex-row`'>
                     <div>
-
+                        <img src={`data:image/png;base64,${tempBase64}`} />
                     </div>
-                    <div>
-                        <input type='text' value={tempRace} onChange={() => setTempRace} />
-                        <div>Gender: {tempGender}</div>
-                        <div>Emotion: {tempEmotion}</div>
-                        <button onClick={() => setIsResponse(false)}>Back</button>
+                    <div className='flex flex-col'>
+                        <div className='flex flex-row justify-around'>
+                            <p>Age: </p>
+                            <input className="border-2 border-black" type='text' value={tempAge} onChange={() => setTempAge} />
+                        </div>
+                        <div className='flex flex-row justify-around'>
+                            <p>Race: </p>
+                            <input className="border-2 border-black" type='text' value={tempRace} onChange={() => setTempRace} />
+                        </div>
+                        <div className='flex flex-row justify-around'>
+                            <p>Gender: </p>
+                            <input className="border-2 border-black" type='text' value={tempGender} onChange={() => setTempGender} />
+                        </div>
+                        <div className='flex flex-row justify-around'>
+                            <p>Emotion: </p>
+                            <input className="border-2 border-black" type='text' value={tempEmotion} onChange={() => setTempEmotion} />
+                        </div>
+                        <button className='bg-yellow-400 rounded-xl' onClick={() => setIsResponse(false)}>Back</button>
                         {/* // Save the data to the database */}
-                        <button onClick={() => setIsResponse(false)}>Save</button>
+                        <button className='bg-green-400 rounded-xl' onClick={() => sendToBackend()}>Save</button>
                     </div>
 
                 </div>
