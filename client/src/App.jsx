@@ -12,6 +12,8 @@ function App() {
   const [isLogged, setIsLogged] = useState(false)
   const [isAdmin, setIsAdmin] = useState(true)
 
+  const [userName, setUserName] = useState('');
+
   const [race, setRace] = useState([])
   const [emotion, setEmotion] = useState([])
   const [gender, setGender] = useState([])
@@ -101,7 +103,7 @@ function App() {
 
             </>
             :
-            < Login isLogged={isLogged} setIsLogged={setIsLogged} />
+            < Login setIsAdmin={setIsAdmin} setIsLogged={setIsLogged} setUserName={setUserName} />
           }
         </div>
       </div>
