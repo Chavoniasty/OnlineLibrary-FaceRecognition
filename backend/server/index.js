@@ -46,7 +46,7 @@ app.get('/faces', async (req, res) => {
             return;
         }
         data.forEach((elem) => {
-            elem.facedata = Buffer.from(elem.facedata).toString('base64')
+            elem.facedata = Buffer.from(elem.facedata).toString()
         })
         res.json({
             "data": data,
@@ -81,7 +81,7 @@ app.get('/login', async (req, res) => {
             "id": user.id,
             "username": user.username,
             "email": user.email,
-            "isAdmin": Buffer.from(user.is_admin).toString() != '0'
+            "isAdmin": Buffer.from(user.is_admin).toString() == '\u0001'
         });
     } catch (error) {
         console.error(error);

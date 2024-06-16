@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 
 function App() {
   const [isLogged, setIsLogged] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   const [userName, setUserName] = useState('');
 
@@ -36,7 +36,7 @@ function App() {
   };
 
 
-  const [faces, setFaces] = useState()
+  const [faces, setFaces] = useState([])
 
   const getFacesFromDB = async () => {
     try {
@@ -59,8 +59,8 @@ function App() {
       }
 
       const data = await response.json();
-      console.log(data);
-      setFaces(data);
+      console.log(data.data);
+      setFaces(data.data);
     } catch (error) {
       console.error('There has been a problem with your fetch operation:', error);
     }
