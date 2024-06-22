@@ -373,5 +373,6 @@ $RECYCLE.BIN/
 
 data/
 *.h5
+models/
 
 database/secrets/*.txt

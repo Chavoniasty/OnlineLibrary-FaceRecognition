@@ -10,16 +10,12 @@ services:
         condition: service_healthy
     ports:
       - "3000:3000"
+    env_file:
+      - ./.env
     networks:
       - grpc-net
       - client-server-net
       - db-net
-    environment:
-      DB_USER: admin
-      DB_NAME: library
-      DB_PASSWORD_FILE: /run/secrets/db_password
-    secrets:
-      - db_password
     develop:
       watch:
         - action: sync+restart
@@ -40,10 +36,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      DB_PASSWORD_FILE: /run/secrets/db_password
-    secrets:
-      - db_password
     develop:
       watch:
         - action: sync+restart
@@ -77,14 +69,13 @@ services:
       - ./database/scripts:/docker-entrypoint-initdb.d
     restart: always
     environment:
-      MYSQL_USER: admin
-      MYSQL_DATABASE: library
+      MYSQL_DATABASE: faceslib
       MYSQL_INITDB_SKIP_TZINFO: yes
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
-      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    env_file:
+      - ./.env
     secrets:
       - db_root_password
-      - db_password
     expose:
       - 3306
       - 33060
@@ -96,7 +87,7 @@ services:
       test:
         [
           'CMD-SHELL',
-          'mysqladmin ping -h 127.0.0.1 --password="$$(cat /run/secrets/db_password)" --silent'
+          'mysqladmin ping -h 127.0.0.1 --password="$$(cat /run/secrets/db_root_password)" --silent'
         ]
       interval: 3s
       retries: 5
@@ -109,13 +100,13 @@ services:
       - "8080:80"
     environment:
       PMA_HOST: db
-      PMA_USER: admin
-      PMA_PASSWORD_FILE: /run/secrets/db_password
+      PMA_USER: root
+      PMA_PASSWORD_FILE: /run/secrets/db_root_password
       PMA_ARBITRARY: 1
     networks:
       - db-net
     secrets:
-      - db_password
+      - db_root_password
     depends_on:
       - db
 
@@ -128,7 +119,5 @@ networks:
     driver: bridge
 
 secrets:
-  db_password:
-    file: ./database/secrets/db_password.txt
   db_root_password:
     file: ./database/secrets/db_root_password.txt
